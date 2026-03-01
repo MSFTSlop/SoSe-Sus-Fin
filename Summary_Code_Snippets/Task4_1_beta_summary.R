@@ -1,5 +1,10 @@
 # 1. Calculate the mean of each column (excluding the 'Year' column)
 # This gives us the average annual excess return for each quintile
+
+## over here the average exxcess return of each portfolio over the 25 years (2001-2025)
+## is calculated
+## the columns are each portfolio (excluding the first column with years in it)
+
 beta_averages_vec <- colMeans(Sorted_Beta_Portfolio_Results_df[, -1], na.rm = TRUE)
 
 # 2. Construct the clean two-column dataframe

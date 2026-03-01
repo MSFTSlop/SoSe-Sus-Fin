@@ -15,6 +15,8 @@ for (k in agencies) {
   temp_raw_df <- get(paste0("ESG_Rating_", k, "_df"))
   
   # 2. Staging area: Isolate the Year and the 500 company return columns
+  ## we divide here each dataframe between years (metadata) and the actual
+  ## data, which needs to be transformed to get the z-score
   temp_years_vec <- temp_raw_df[, 1]
   temp_comp_mat  <- as.matrix(temp_raw_df[, 2:501])
   
@@ -22,6 +24,13 @@ for (k in agencies) {
   # scale() executes the standardization formula in two steps:
   #   - Centering: Subtracts the mean (avg) of the 500 companies so the new mean is 0.
   #   - Scaling: Divides by the standard deviation so the new spread is 1 unit.
+  ## equation 7 is executed in the scale formula
+  ## it is built up as follows
+  ### transpose() results in putting stocks as columns and years as rows
+  ### which is required due to how apply() works
+  ### apply() when it processes a row of 500 stocks the output is a column
+  ### 1 is a number to tell r, it needs to work across years (row wise)
+  ### scale is the r way of caluclation the z score listed in the equation 7
   # This makes different agency scales (e.g., 0-100 vs 1-5) directly comparable.
   temp_z_mat <- t(apply(temp_comp_mat, 1, scale))
   
@@ -38,6 +47,8 @@ for (k in agencies) {
   colnames(temp_final_df)[2:501] <- colnames(temp_raw_df)[2:501]
   
   # 7. Assign to a permanent variable name (Z_A, Z_B, etc.) and save to environment
+  ## basically each calculated ESG Score gets its own unique datframe with
+  ## standardized z values
   assign(paste0("Z_", k), temp_final_df)
 }
 

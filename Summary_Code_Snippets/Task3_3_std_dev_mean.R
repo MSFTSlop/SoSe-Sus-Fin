@@ -3,6 +3,9 @@
 # ==============================================================================
 message("Verifying Z-Score Standardization (Target: Mean=0, SD=1)")
 
+## this is a code verification as stated below equation 9
+## across companies i check the mean and standard dev (as seen in point 3)
+
 # 1. Identify the years in your combined dataset
 # Assuming 'ESG_Z_Score_Combined' is the result from Task 3.3
 unique_years <- sort(unique(ESG_combined_df$Year))

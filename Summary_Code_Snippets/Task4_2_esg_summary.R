@@ -1,3 +1,7 @@
+## over here the average exxcess return of each portfolio over the 25 years (2001-2025)
+## is calculated
+## the columns are each portfolio (excluding the first column with years in it)
+
 # 1. Calculate the mean for each ESG quintile over the 25-year period
 # We take the column means of the results we just calculated
 esg_averages_vec <- colMeans(Sorted_ESG_Portfolio_Results_df[, -1], na.rm = TRUE)

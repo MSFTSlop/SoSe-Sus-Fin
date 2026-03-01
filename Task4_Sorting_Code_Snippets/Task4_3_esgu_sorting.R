@@ -1,5 +1,13 @@
 message("Start ESG Uncertainty Sorting")
 
+## over all this code is almost the same as in 4_1
+## only difference is now we rank with esgu scores and not
+## the beta.
+## the weight rebalancing still happens with the excess return
+
+### so for detailed explaination check 4_1
+
+
 # --- 1. DATA ALIGNMENT ---
 # Signal: ESG Uncertainty/Standard Deviation (2000-2024)
 signal_unc_df <- ESGU_combined_df[ESGU_combined_df$Year >= 2000 & 

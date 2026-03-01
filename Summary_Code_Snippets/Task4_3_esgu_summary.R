@@ -1,3 +1,7 @@
+## over here the average exxcess return of each portfolio over the 25 years (2001-2025)
+## is calculated
+## the columns are each portfolio (excluding the first column with years in it)
+
 # 1. Calculate the 25-year means
 unc_averages_vec <- colMeans(Sorted_Uncertainty_Portfolio_Results_df[, -1], na.rm = TRUE)
 

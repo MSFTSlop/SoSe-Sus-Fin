@@ -11,11 +11,17 @@ temp_z_list <- list(Z_A[, 2:501], Z_B[, 2:501], Z_C[, 2:501],
 
 # 2. Calculate the average across agencies (Equation 8)
 # Reduce(+) sums the dataframes element-wise; then we divide by 6
+## essentially you overlay all the 6 dataframes ontop of each other
+## since their structure is essentially the same and sum up the ratings
+## to one dataframe
+## at the end you need to divide it by 6 to get the average
 temp_s_matrix <- Reduce("+", temp_z_list) / 6
 
 # 3. Final Normalization (Equation 9)
 # We apply scale() row-wise again to ensure the final aggregate is a Z-score
 # This ensures mean = 0 and SD = 1 for the final combined rating
+## for a detailed explaination as to what happened heare
+## check 3_2
 temp_combined_z <- t(apply(temp_s_matrix, 1, scale))
 
 # 4. Construct the final dataframe with Year in the first column

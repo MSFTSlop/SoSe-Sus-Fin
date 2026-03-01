@@ -6,6 +6,12 @@ message("Start Beta Sorting")
 #   - We need signals from 2000 to 2024 (25 years)
 #   - We need returns from 2001 to 2025 (25 years)
 
+## to be honest, even when going through it again it is 
+## still not 100% clear how the dataframe should have
+## been constructed
+## as stated the base is the prevous years beta which are sorted
+## the weighting comes from the returns on that year
+
 # Extracting the 25 years of signals (t-1)
 # We take rows 1 to 25 of the Beta data (Year 2000 to 2024)
 signal_betas_df <- stock_beta_df[stock_beta_df$Year >= 2000 & stock_beta_df$Year <= 2024, ]
@@ -26,6 +32,8 @@ for (i in 1:25) {
   
   # Step A: Get the signal from the previous year (e.g., Year 2000)
   # We remove column 1 (the Year) to get only the 500 stock betas
+  ## according to gemini the i,-1 is telling r, give me everything EXCEPT
+  ## col 1
   temp_betas_signal <- as.numeric(signal_betas_df[i, -1])
   
   # Step B: Get the actual returns for the following year (e.g., Year 2001)
@@ -33,6 +41,9 @@ for (i in 1:25) {
   
   # Step C: Rank the stocks from 1 to 500 based on the signal
   # ties.method = "first" ensures we always have exactly 100 stocks per bucket
+  ## interesting, here the re ranking happens since each year the portfolio 
+  ## composition may change depending on the change of their respective betas
+  ## thats why we use the beta signal
   temp_ranks <- rank(temp_betas_signal, ties.method = "first")
   
   # Step D: Allocate stocks into 5 Portfolios (Quintiles)
@@ -45,6 +56,9 @@ for (i in 1:25) {
     temp_stock_indices <- which(temp_ranks >= lower_bound & temp_ranks <= upper_bound)
     
     # Step E: Calculate the Equal-Weighted average return for these 100 stocks
+    ## at this point you use the equal weighting, saying the excess return on a portfolio
+    ## in a given year will simply be the average excess return on the 100 stocks 
+    ## that enter that portfolio in that year
     beta_port_matrix[i, p] <- mean(temp_returns_performance[temp_stock_indices], na.rm = TRUE)
   }
 }
