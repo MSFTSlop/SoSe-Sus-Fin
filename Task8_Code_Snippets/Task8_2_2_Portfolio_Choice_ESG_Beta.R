@@ -35,8 +35,8 @@ for (yr in optimization_years_val) {
       # Constraint Vector c
       c_vec <- c(target_mu, target_esg, target_beta_val, target_investment_val)
       
-      # Solve for Lagrange Multipliers (psi)
-      psi <- solve(Gamma_t) %*% c_vec 
+      # Solve for Lagrange Multipliers (psi) EQ 77
+      psi <- solve(Gamma_t) %*% c_vec  
       
       # Calculate Optimal Weights (Eq 57)
       w_t <- Sigma_inv %*% (psi[1]*mu_final + psi[2]*esg_t + 
