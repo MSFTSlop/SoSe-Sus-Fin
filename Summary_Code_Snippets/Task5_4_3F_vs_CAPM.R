@@ -24,7 +24,7 @@ print(CAPM_VS_ThreeF_df)
 cat("\nThe three-factor model provides a superior estimate of the cost of capital compared to the CAPM, as the risk exposures to ESG and ESG Uncertainty account for the returns that the market beta previously could not explain")
 
 # Cleanup of data
-rm(s, CAPM_Summary, factors_3f, Y, model, portfolios)
+rm(s, factors_3f, Y, model, portfolios)
 # Cleanup of Values
 rm(actual_mkt_excess, alpha_t, alpha_val, estimated_mkt_lambda, lambda_storage_esg, lambda_storage_esgu,
    mkt_correlation, p_name, Re_t_plus_1, sd_lambdas, sharpe_ratios, t, year_labels)

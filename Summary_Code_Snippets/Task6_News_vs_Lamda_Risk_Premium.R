@@ -5,6 +5,9 @@
 lambda_esg_val  <- mean_lambdas[3]
 lambda_esgu_val <- mean_lambdas[4]
 
+print(" News impact summary (t values)")
+print(News_Impact_Summary)
+
 # 2. Create the Comparison Table
 Comparison_Final <- data.frame(
   Factor = c("ESG Consensus", "ESG Uncertainty"),
@@ -48,7 +51,7 @@ cat("\n--- TASK 6: THEORETICAL INTERPRETATION ---\n\n",
 # - mean_lambdas (needed for the Task 7 correlation analysis)
 
 # We REMOVE the regression-specific storage and loop variables
-rm(b_storage, model_news, News_Impact_Summary, 
+rm(b_storage, model_news,
    Sorted_Beta_v, Sorted_ESG_v, Sorted_Unc_v, 
    Three_Factor_Summary, ThreeF_Summary, CAPM_VS_ThreeF_df,
    Comparison_Final, X, x1_news, x2_news, y_ret, sd_b, t, t_stats_b)
