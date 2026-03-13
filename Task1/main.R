@@ -1,6 +1,8 @@
 #install packages
+#install.packages("ggplot2")
 
 #load packages
+library(ggplot2)
 
 #set WD (do it manually for now via R-Studio)
 
