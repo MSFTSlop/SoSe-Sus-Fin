@@ -49,3 +49,7 @@ colnames(FF5_Factors_annual_base_df)[1] <- "date"
 FF5_Factors_annual_base_df <- na.omit(FF5_Factors_annual_base_df)
 
 # initial data processing
+message("Start the initial Data cleanup from 2002-2023")
+source("Task1_Code/Date_formatting.R")
+message("Continue with the remaining data processing tasks")
+source("Task1_Code/Data_preparation.R")
