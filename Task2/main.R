@@ -53,3 +53,64 @@ message("Start the initial Data cleanup from 2002-2023")
 source("Task1_Code/Date_formatting.R")
 message("Continue with the remaining data processing tasks")
 source("Task1_Code/Data_preparation.R")
+
+# starting task work
+message("Looking for Trends in ESG combined and CO2 Emissions relative to rev")
+source("Task2_Code/Task2_1_Code.R")
+message("Portfolio Sort on Combined ESG Score, environment, social, governance, CO2, co2 to rev")
+# =========================================================================
+# 1. EXPLICITLY CREATE THE CHARACTERISTIC LISTS
+# Run this first so R knows exactly what these objects are!
+# =========================================================================
+char_t_dfs <- list(
+  MB_Ratio = Market_Book_cleaned_df,
+  DY = Div_Yield_cleaned_df
+)
+
+char_t1_dfs <- list(
+  ROE = ROE_cleaned_df,
+  ROIC = ROIC_cleaned_df,
+  OP_Margin = OP_Margin_cleaned_df,
+  Excess_Return = Stock_Excess_Return_cleaned_df
+)
+## activate the function
+source("Task2_Code/Task2_2_1_to_2.R")
+# =========================================================================
+# 3. RUN SORTS AND BUILD SUMMARY TABLE (Passing the lists explicitly)
+# =========================================================================
+Final_Summary_Table <- data.frame(
+  Combined_ESG = test_null_ls(ESG_Combined_cleaned_df, "ESG_Combined", char_t_dfs, char_t1_dfs),
+  Environment  = test_null_ls(Environment_cleaned_df, "Environment", char_t_dfs, char_t1_dfs),
+  Social       = test_null_ls(Social_cleaned_df, "Social", char_t_dfs, char_t1_dfs),
+  Governance   = test_null_ls(Governance_cleaned_df, "Governance", char_t_dfs, char_t1_dfs),
+  Log_CO2      = test_null_ls(CO2_cleaned_df, "Log_CO2", char_t_dfs, char_t1_dfs),
+  CO2_to_Rev   = test_null_ls(CO2_to_Rev_cleaned_df, "CO2_to_Rev", char_t_dfs, char_t1_dfs)
+)
+
+Final_Summary_Table <- round(Final_Summary_Table, 4)
+
+print("Final Long-Short Portfolio Summary Table:")
+print(Final_Summary_Table)
+
+message("Special Portfolio sort for the change in LN(Co2)")
+source("Task2_Code/Task2_2_3.R")
+# 1. Put ALL characteristics into one list (since we treat them all as Year T now)
+co2_chars_list <- list(
+  ROE = ROE_cleaned_df,
+  ROIC = ROIC_cleaned_df,
+  OP_Margin = OP_Margin_cleaned_df,
+  Excess_Return = Stock_Excess_Return_cleaned_df,
+  MB_Ratio = Market_Book_cleaned_df,
+  DY = Div_Yield_cleaned_df
+)
+
+# 2. Run the Analysis for CO2 Change
+CO2_Change_Results <- test_null_ls_contemporaneous(
+  sort_df = CO2_Change_cleaned_df, 
+  sort_name = "CO2_Change", 
+  all_chars_list = co2_chars_list
+)
+
+# 3. View the Results
+print(CO2_Change_Results)
+

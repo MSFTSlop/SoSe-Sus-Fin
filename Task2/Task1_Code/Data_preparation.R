@@ -41,6 +41,9 @@ for (df_name in outlier_dfs) {
   for (j in stock_cols) {
     # Replace any value > 500 or < -500 with NA
     # This addresses the extreme observations mentioned in your instructions
+    ## seems like this is a specific R-Syntax. it extracts the intire vector
+    ## in column j; checks each value if its bigger 500 or smaller -500 to 
+    ## apply an NA
     temp_df[[j]][temp_df[[j]] > 500 | temp_df[[j]] < -500] <- NA
   }
   
@@ -64,6 +67,7 @@ Market_Book_cleaned_df[, stock_cols][Market_Book_cleaned_df[, stock_cols] < 0] <
 # sum(Market_Book_cleaned_df[, stock_cols] < 0, na.rm = TRUE)
 
 message("Creating the Change lnCO2 dataframe")
+
 # 1. Create a new dataframe to store the changes
 # We keep CO2_cleaned_df (which contains ln values) untouched
 CO2_Change_cleaned_df <- CO2_cleaned_df
@@ -71,26 +75,29 @@ CO2_Change_cleaned_df <- CO2_cleaned_df
 # 2. Identify stock columns (2 to 504)
 stock_cols <- 2:ncol(CO2_Change_cleaned_df)
 
-# -------------------------------------------------------------------------
-# IMPLEMENTING FORMULAS (3) AND (4)
-# -------------------------------------------------------------------------
-
-# Formula (3): Delta ln CO2_{i, t+1} = ln CO2_{i, t+1} - ln CO2_{i, t}
-# We use indexing to align 'current year' (rows 2 to 22) with 'previous year' (rows 1 to 21)
-
-CO2_Change_cleaned_df[-1, stock_cols] <- CO2_cleaned_df[-1, stock_cols] - 
-  CO2_cleaned_df[-nrow(CO2_cleaned_df), stock_cols]
-
-# Formula (4): Delta ln CO2_{i, t+1} = NA if either ln CO2 values are missing
-# NOTE: R's subtraction naturally returns NA if any input is NA. 
-# No extra code is needed to satisfy Formula (4).
-
-# -------------------------------------------------------------------------
-
 # 3. Handle the Boundary Condition (The first year)
-# Since we don't have data for 2001, the change for 2002 is undefined.
+# Since we don't have data for 2001 (year t-1), the change for 2002 is undefined.
 CO2_Change_cleaned_df[1, stock_cols] <- NA
 
-# 4. (Optional) Sanity Check
-# View the first 5 columns for the first 5 years
-print("Year 2002 should be all NA")
+# -------------------------------------------------------------------------
+# IMPLEMENTING FORMULAS (3) AND (4) EXACTLY AS WRITTEN
+# -------------------------------------------------------------------------
+n_years <- nrow(CO2_cleaned_df)
+
+# We loop through time, strictly going from year t to t+1
+for (t in 1:(n_years - 1)) {
+  
+  # Formula (3): $\Delta \ln CO2_{i, t+1} = \ln CO2_{i, t+1} - \ln CO2_{i, t}$
+  # We calculate the change between t and t+1, and store it in the t+1 row.
+  CO2_Change_cleaned_df[t + 1, stock_cols] <- CO2_cleaned_df[t + 1, stock_cols] - 
+    CO2_cleaned_df[t, stock_cols]
+  
+  # Formula (4): $\Delta \ln CO2_{i, t+1} = NA$ if either value is missing.
+  # NOTE: R naturally handles this. If t or t+1 is NA, the subtraction evaluates to NA.
+}
+# -------------------------------------------------------------------------
+
+# 4. Sanity Check
+# View the first few rows and columns to verify
+print("Year 2002 should be all NA. Year 2003 should equal 2003 - 2002.")
+head(CO2_Change_cleaned_df[, 1:5])
