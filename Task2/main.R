@@ -114,3 +114,58 @@ CO2_Change_Results <- test_null_ls_contemporaneous(
 # 3. View the Results
 print(CO2_Change_Results)
 
+## short cleanup
+message("Cleaning up workspace before starting into 2.3")
+rm(avg_co2_rev, avg_esg, lines, n_years, split_idx, stock_cols, t, y_limits, years, 
+   char_t_dfs, char_t1_dfs, Trend_Analysis_df, ROA_cleaned_df, FF5_Factors_monthly_cleaned_df,
+   CO2_cleaned_df, CO2_Change_cleaned_df, CO2_to_Rev_cleaned_df, Div_Yield_cleaned_df,
+   Environment_cleaned_df, Governance_cleaned_df, Social_cleaned_df, ESG_Combined_cleaned_df,
+   co2_chars_list, Market_Book_cleaned_df, OP_Margin_cleaned_df, ROE_cleaned_df, ROIC_cleaned_df,
+   Stock_Return_cleaned_df, Stock_Excess_Return_cleaned_df)
+
+rownames(CO2_Change_LS_Sorted) <- NULL
+rownames(CO2_to_Rev_LS_Sorted) <- NULL
+rownames(Environment_LS_Sorted) <- NULL
+rownames(ESG_Combined_LS_Sorted) <- NULL
+rownames(Governance_LS_Sorted) <- NULL
+rownames(Log_CO2_LS_Sorted) <- NULL
+rownames(Social_LS_Sorted) <- NULL
+
+# trying to find a significant alpha relative to existing factors
+message("Trying to find a significant alpha in our LS-Portfolios")
+source("Task2_Code/Task2_3.R")
+
+message("Final Cleanup")
+# =========================================================================
+# WORKSPACE CLEANUP
+# =========================================================================
+
+# 1. Define exactly what we want to KEEP
+objects_to_keep <- c(
+  # The 7 Long-Short Portfolio DataFrames
+  "ESG_Combined_LS_Sorted",
+  "Environment_LS_Sorted",
+  "Social_LS_Sorted",
+  "Governance_LS_Sorted",
+  "Log_CO2_LS_Sorted",
+  "CO2_to_Rev_LS_Sorted",
+  "CO2_Change_LS_Sorted",
+  
+  # The Final Result & Summary Tables
+  "Final_Summary_Table",
+  "Alpha_Summary_Table",
+  "CO2_Change_Results",
+  
+  # The Master Functions (good to keep around just in case!)
+  "test_null_ls",
+  "test_null_ls_contemporaneous"
+)
+
+# 2. Remove everything else from the global environment
+rm(list = setdiff(ls(), objects_to_keep))
+
+# 3. Optional: Run garbage collection to free up RAM
+# gc()
+
+message("Activating CSV Exporter")
+source("Exported_Results/Exporter.R")
