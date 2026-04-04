@@ -13,18 +13,28 @@ ls_portfolios <- c(
 )
 
 # --- STEP 2: Prepare the Factor Data ---
-# Load the Fama-French factor dataset. Note: In standard FF data, the "MKT" 
-# factor (market excess return) is labeled as "Mkt.RF". 
+# Load the Fama-French factor dataset. 
 ff_data <- FF5_Factors_annual_cleaned_df
 colnames(ff_data)[colnames(ff_data) == "date"] <- "Year" # Standardize key for merging
 
 # Build a master dataset combining all 7 LS returns with the FF factors
 master_reg_data <- ff_data
+
 for (port in ls_portfolios) {
   df <- get(port)
   # Extract only the Year and the LS Excess Return
   temp_df <- df[, c("Year", "Excess_Return_LS")]
   colnames(temp_df)[2] <- port # Rename column to the portfolio name
+  
+  # --- THE CRITICAL FIX: YEAR ALIGNMENT ---
+  # For tasks 2.2.1 and 2.2.2, we sorted in year t and held the portfolio in year t+1. 
+  # We must shift the Year + 1 so it merges with the Fama-French factors of the year 
+  # the return ACTUALLY occurred.
+  # Task 2.2.3 (CO2_Change) was sorted and evaluated in the SAME year, so it needs no offset.
+  if (port != "CO2_Change_LS_Sorted") {
+    temp_df$Year <- temp_df$Year + 1
+  }
+  # ----------------------------------------
   
   # Merge into the master factor dataset by Year
   master_reg_data <- merge(master_reg_data, temp_df, by = "Year", all.x = TRUE)
